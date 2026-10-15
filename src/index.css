@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    background-image:
+      radial-gradient(900px 500px at 12% -5%, rgba(47, 107, 255, 0.16), transparent 60%),
+      radial-gradient(700px 420px at 95% 5%, rgba(124, 58, 237, 0.12), transparent 60%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+  ::selection { background: #00cfff4d; }
+  :focus-visible { outline: 2px solid #00cfff; outline-offset: 2px; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8; }
+  .glass {
+    @apply rounded-2xl border border-line backdrop-blur-lg;
+    background-color: #0d1428b3;
+    box-shadow: 0 10px 40px -20px rgba(0, 0, 0, 0.8);
+  }
+  .glass-hover { @apply transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-glow; }
+  .btn-primary, .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary { background-image: linear-gradient(135deg, #2f6bff, #00cfff); @apply text-white hover:-translate-y-0.5 hover:shadow-glow; }
+  .btn-ghost { @apply border border-line bg-surface2/60 text-ink hover:border-accent/50 hover:text-accent; }
+  .btn-sm { @apply px-3 py-1.5 text-xs; }
+  .input { @apply w-full rounded-xl border border-line bg-surface2/70 px-4 py-2.5 text-sm text-ink transition placeholder:text-muted/60 focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/30; }
+  .label { @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted; }
+  .chip { @apply inline-flex items-center rounded-full border border-line bg-surface2/70 px-3 py-1 text-xs text-muted; }
+  .gradient-text { background-image: linear-gradient(135deg, #00cfff, #2563eb 55%, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .glow-border { position: relative; }
+  .glow-border::before {
+    content: ''; position: absolute; inset: 0; padding: 1px; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(135deg, #00cfff99, #2563eb26 50%, #7c3aed80);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+  }
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+.animate-blink { animation: blink 1s steps(1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
