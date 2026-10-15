@@ -22,21 +22,20 @@ export default function Contact() {
     e.preventDefault()
     setStatus({ state: 'sending' })
     try {
+      const formData = new FormData()
+      formData.append('access_key', WEB3FORMS_ACCESS_KEY)
+      formData.append('from_name', form.name)
+      formData.append('name', form.name)
+      formData.append('email', form.email)
+      formData.append('subject', form.subject)
+      formData.append('message', form.message)
+
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
-          from_name: form.name,
-          name: form.name,
-          email: form.email,
-          subject: form.subject,
-          message: form.message,
-          botcheck: '',
-        }),
+        body: formData,
       })
       const data = await res.json()
       if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`)
