@@ -4,8 +4,8 @@ import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi'
 import Section from './Section.jsx'
 import { profile } from '../data/portfolioData.js'
 
+const WEB3FORMS_ACCESS_KEY = 'e3d72fb8-d78b-4556-b2a1-46b88a2d5926'
 const empty = { name: '', email: '', subject: '', message: '' }
-const encode = (data) => new URLSearchParams(data).toString()
 
 export default function Contact() {
   const [form, setForm] = useState(empty)
@@ -22,13 +22,24 @@ export default function Contact() {
     e.preventDefault()
     setStatus({ state: 'sending' })
     try {
-      // Netlify Forms: posts to the static form declared in index.html.
-      const res = await fetch('/', {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode({ 'form-name': 'contact', ...form }),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          from_name: form.name,
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          botcheck: '',
+        }),
       })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`)
       setStatus({ state: 'sent' })
       setForm(empty)
     } catch {
@@ -42,13 +53,10 @@ export default function Contact() {
         <form
           name="contact"
           method="POST"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
           onSubmit={onSubmit}
           className="glass glow-border space-y-5 p-6 sm:p-8 lg:col-span-3"
         >
-          <input type="hidden" name="form-name" value="contact" />
-          <p className="hidden"><label>Don’t fill this out: <input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
+          <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
